@@ -28,6 +28,14 @@ async function run() {
     // await client.connect();
     const blogCollection = client.db("blogDB").collection('blog')
 
+// get
+
+app.get('/blog',async(req,res)=>{
+  const cursor =blogCollection.find();
+  const result =await cursor.toArray()
+  res.send(result)
+})
+
 // post
 app.post('/blog',async(req,res)=>{
     const newBlog=req.body
