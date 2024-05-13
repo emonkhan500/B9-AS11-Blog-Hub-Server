@@ -2,7 +2,7 @@ const express =require('express')
 const cors =require('cors')
 const app =express();
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 
 
@@ -35,6 +35,39 @@ app.get('/blog',async(req,res)=>{
   const cursor =blogCollection.find().sort({time: -1});
   const result =await cursor.toArray()
   res.send(result)
+})
+
+// wish get
+app.get('/wishlist/:userEmail', async (req, res) => {
+  const email= req.params.userEmail;
+  const query = { userEmail: (email) }
+  const wishBLog = await wishCollection.find(query).toArray();
+  res.send(wishBLog);
+})
+  // update
+  
+  app.get('/blog/:id',async(req,res)=>{
+    const id= req.params.id
+    const query={_id:new ObjectId(id)}
+    const result=await blogCollection.findOne(query)
+    res.send(result)
+  })
+  
+  // update
+app.put('/blog/:id',async(req,res)=>{
+  const id=req.params.id
+  const filter={_id:new ObjectId(id)}
+  const options={upsert:true}
+  const updatedBlog=req.body
+  const blog={
+    $set:{
+      image:updatedBlog.image,
+       title:updatedBlog.title,
+       category:updatedBlog.category,description:updatedBlog.description, longdescription:updatedBlog.longdescription,
+    }
+  }
+const result=await blogCollection.updateOne(filter,blog,options)
+res.send(result)
 })
 
 // post
