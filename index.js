@@ -27,11 +27,12 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
     const blogCollection = client.db("blogDB").collection('blog')
+    const wishCollection = client.db("blogDB").collection('wish')
 
 // get
 
 app.get('/blog',async(req,res)=>{
-  const cursor =blogCollection.find();
+  const cursor =blogCollection.find().sort({time: -1});
   const result =await cursor.toArray()
   res.send(result)
 })
@@ -43,7 +44,14 @@ app.post('/blog',async(req,res)=>{
     const result = await blogCollection.insertOne(newBlog);
       res.send(result)
 })
-// 
+// wish
+
+app.post('/wishlist', async (req, res) => {
+  const  blog  = req.body;
+ console.log(blog)
+  const result = await wishCollection.insertOne(blog);
+  res.send(result);
+});
 
 
 
