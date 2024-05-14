@@ -28,9 +28,9 @@ async function run() {
     // await client.connect();
     const blogCollection = client.db("blogDB").collection('blog')
     const wishCollection = client.db("blogDB").collection('wish')
+    const commentCollection = client.db("blogDB").collection('comment')
 
 // get
-
 app.get('/blog',async(req,res)=>{
   const cursor =blogCollection.find().sort({time: -1});
   const result =await cursor.toArray()
@@ -44,9 +44,9 @@ app.get('/wishlist/:userEmail', async (req, res) => {
   const wishBLog = await wishCollection.find(query).toArray();
   res.send(wishBLog);
 })
+
   // update
-  
-  app.get('/blog/:id',async(req,res)=>{
+app.get('/blog/:id',async(req,res)=>{
     const id= req.params.id
     const query={_id:new ObjectId(id)}
     const result=await blogCollection.findOne(query)
@@ -73,12 +73,13 @@ res.send(result)
 // post
 app.post('/blog',async(req,res)=>{
     const newBlog=req.body
+    delete newBlog._id
     console.log(newBlog)
     const result = await blogCollection.insertOne(newBlog);
       res.send(result)
 })
-// wish
 
+// wish
 app.post('/wishlist', async (req, res) => {
   const  blog  = req.body;
  console.log(blog)
@@ -87,8 +88,33 @@ app.post('/wishlist', async (req, res) => {
 });
 
 
+// delete
+app.delete('/wishlist/:id',async(req,res)=>{
+  const id= req.params.id
+  console.log(id)
+  const query={_id:new ObjectId(id)}
+  const result=await wishCollection.deleteOne(query)
+  res.send(result)
+})
 
 
+// comment related
+
+   // Post new comment
+   app.post('/comment', async (req, res) => {
+    const comment = req.body;
+    // console.log(comment)
+    const result = await commentCollection.insertOne(comment);
+    res.send(result)
+
+    
+  });
+// comment get
+  app.get('/comment',async(req,res)=>{
+    const cursor =commentCollection.find()
+    const result =await cursor.toArray()
+    res.send(result)
+  })
 
     
     // Send a ping to confirm a successful connection
