@@ -6,7 +6,7 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 
 
-// middleWare
+// middleWar
 app.use(cors({
   origin:[
    'http://localhost:5173',
@@ -66,9 +66,11 @@ app.put('/blog/:id',async(req,res)=>{
   const updatedBlog=req.body
   const blog={
     $set:{
-      image:updatedBlog.image,
+       image:updatedBlog.image,
        title:updatedBlog.title,
-       category:updatedBlog.category,description:updatedBlog.description, longdescription:updatedBlog.longdescription,
+       category:updatedBlog.category,
+       description:updatedBlog.description, 
+       longdescription:updatedBlog.longdescription,
     }
   }
 const result=await blogCollection.updateOne(filter,blog,options)
