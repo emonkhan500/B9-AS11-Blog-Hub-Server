@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000;
 app.use(cors({
   origin:[
    'http://localhost:5173',
-   'https://assignment-blog-hub.netlify.app'
+   'https://blog-hub-d3c35.web.app'
   ]
 }))
 app.use(express.json())
